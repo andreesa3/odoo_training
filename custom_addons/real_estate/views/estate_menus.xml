@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <menuitem id="real_estate_root" name="Real Estate">
+        <!-- Advertisement -->
+        <menuitem id="real_estate_ads" name="Advertisement">
+            <menuitem id="real_estate_properties" name="Properties" action="estate_property_action"/>
+            <menuitem id="real_estate_offer" name="Offers" action="estate_property_offer_action"/>
+        </menuitem>
+        <!-- Settings -->
+        <menuitem id="real_estate_settings" name="Settings">
+            <menuitem id="real_estate_property_types" name="Property Types" action="estate_property_type_action"/>
+            <menuitem id="real_estate_property_tags" name="Property Tags" action="estate_property_tag_action"/>
+        </menuitem>
+    </menuitem>
+</odoo>

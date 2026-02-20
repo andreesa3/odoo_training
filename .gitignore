@@ -1,0 +1,9 @@
+# ignora tutto
+*
+
+# non ignorare la cartella custom_addons
+!custom_addons/
+!custom_addons/**
+
+# non ignorare il gitignore stesso
+!.gitignore
