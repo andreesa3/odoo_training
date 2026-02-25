@@ -13,7 +13,7 @@
                     <field name="postcode" />
                     <field name="expected_price" />
                     <field name="bedrooms" />
-                    <field name="living_area" />
+                    <field name="living_area" filter_domain="[('living_area', 'ilike', self)]" />
                     <field name="facades" />
 
                     <!-- Filter by -->
@@ -36,8 +36,10 @@
             <field name="arch" type="xml">
                 <form string="Estate Form">
                     <header>
-                        <button name="property_sold" type="object" string="Sold" />
-                        <button name="property_cancelled" type="object" string="Cancel" />
+                        <button name="property_sold" type="object" string="Sold"
+                            invisible="state in ('sold', 'canc')" />
+                        <button name="property_cancelled" type="object" string="Cancel"
+                            invisible="state in ('sold', 'canc')" />
 
                         <field name="state" widget="statusbar" />
                     </header>
@@ -85,10 +87,11 @@
                                     <field name="garden" />
                                 </group>
                                 <group>
-                                    <field name="garden_area" />
+                                    <field name="garden_area" invisible='not garden' />
                                 </group>
                                 <group>
-                                    <field name="garden_orientation" widget="radio" />
+                                    <field name="garden_orientation" widget="radio"
+                                        invisible='not garden' />
                                 </group>
                                 <group>
                                     <field name="total_area" />
@@ -96,7 +99,8 @@
                             </page>
                             <page string="Offers">
                                 <group>
-                                    <field name="offer_ids" nolabel="1" />
+                                    <field name="offer_ids" nolabel="1"
+                                        readonly="state in ('sold', 'canc', 'offer_acc')" />
                                 </group>
                             </page>
                             <page string="Other Info">
@@ -118,12 +122,16 @@
             <field name="name">estate.property.view.list</field>
             <field name="model">estate.property</field>
             <field name="arch" type="xml">
-                <list string="Estate List">
+                <list string="Estate List"
+                    decoration-success="state=='offer_rec'"
+                    decoration-bf="state=='offer_acc'"
+                    decoration-muted="state=='sold'">
                     <field name="name" />
+                    <field name="state" invisible="1" />
                     <field name="property_type_id" />
                     <field name="postcode" />
                     <field name="bedrooms" />
-                    <field name="living_area" />
+                    <field name="living_area" optional="True" />
                     <field name="expected_price" />
                     <field name="selling_price" />
                     <field name="date_availability" />
@@ -136,6 +144,7 @@
             <field name="name">Real Estate</field>
             <field name="res_model">estate.property</field>
             <field name="view_mode">list,form</field>
+            <field name="context">{'search_default_available': True}</field>
         </record>
     </data>
 </odoo>

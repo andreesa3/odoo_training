@@ -80,8 +80,6 @@ class EstateProperty(models.Model):
         for record in self:
             prices = record.offer_ids.mapped("price")
             record.best_price = max(prices) if prices else 0.0
-            if record.best_price:
-                record.state = "offer_rec"
 
     @api.onchange("garden")
     def _onchange_garden(self):
@@ -139,7 +137,22 @@ class EstateProperty(models.Model):
                 )
 
     @api.constrains("expected_price")
-    def _check_selling_price(self):
+    def _check_expected_price(self):
         for record in self:
             if record.expected_price <= 0:
                 raise ValidationError(_("Expected price should be positive!"))
+
+    # MODEL INHERITANCE
+    # Deletion of a property
+
+    @api.ondelete(at_uninstall=False)
+    def _unlink_if_new_or_canc(self):
+        for record in self:
+            if record.state not in ("new", "canc"):
+                raise UserError("Properties with at least an offer cannot be deleted!")
+
+    # Versione alternativa
+    # @api.ondelete(at_uninstall=False)
+    # def _unlink_if_new_or_canc(self):
+    #    if any(record.state not in ("new", "canc") for record in self):
+    #        raise UserError("Properties with at least an offer cannot be deleted!")

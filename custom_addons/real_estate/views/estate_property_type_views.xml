@@ -8,11 +8,19 @@
             <field name="arch" type="xml">
                 <form string="Property Type Form">
                     <sheet>
-                        <group>
+                        <div class="oe_button_box">
+                            <button name="action_open_offer_ids"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-list">
+                                <field name="offer_count" widget="line_count" />
+                            </button>
+                        </div>
+                        <div class='oe_title'>
                             <h1>
-                                <field name="name" />
+                                <field name="name" placeholder="Property Type" />
                             </h1>
-                        </group>
+                        </div>
                         <notebook>
                             <page string="Properties">
                                 <field name="property_ids">

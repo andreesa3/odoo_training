@@ -1,4 +1,4 @@
-from odoo import models, fields
+from odoo import _, models, fields, api
 
 
 class PropertyType(models.Model):
@@ -14,3 +14,27 @@ class PropertyType(models.Model):
     property_ids = fields.One2many(
         "estate.property", "property_type_id", string="Properties"
     )
+    offer_ids = fields.One2many(
+        "estate.property.offer", "property_type_id", string="Offers"
+    )
+    offer_count = fields.Integer(compute="_compute_offer_count")
+
+    @api.depends("offer_ids")
+    def _compute_offer_count(self):
+        for record in self:
+            record.offer_count = len(record.offer_ids)
+
+    # STAT BUTTON
+
+    def action_open_offer_ids(self):
+        return {
+            "name": _("Property Offers"),
+            "type": "ir.actions.act_window",
+            "view_mode": "list,form",
+            "res_model": "estate.property.offer",
+            "target": "current",
+            "domain": [("property_type_id", "=", self.id)],
+            "context": {"default_property_type_id": self.id},
+        }
+
+    #

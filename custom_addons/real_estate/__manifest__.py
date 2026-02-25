@@ -4,10 +4,11 @@
     "version": "19.0.0.0.0",
     "author": "Andrea",
     "license": "LGPL-3",
-    "depends": ["base"],
+    "depends": ["base", "mail"],
     "data": [
         "security/res_groups.xml",
         "security/ir.model.access.csv",
+        "views/estate_res_users.xml",
         "views/estate_property_views.xml",
         "views/estate_property_type_views.xml",
         "views/estate_property_offer_views.xml",

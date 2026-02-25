@@ -59,3 +59,25 @@ class PropertyOffer(models.Model):
     def action_refuse(self):
         self.ensure_one()
         self.status = "refused"
+
+    # CREATE METHOD
+    # Creation of a property
+    @api.model_create_multi
+    def create(self, vals):
+        # Troviamo la proprietà
+        for val in vals:
+            property = self.env["estate.property"].browse(val["property_id"])
+
+            # Verifichiamo che il prezzo proposto sia sempre più alto di quello attuale
+            existing_offers = property.offer_ids.mapped("price")
+
+            if existing_offers and val["price"] <= max(existing_offers):
+                raise UserError("The offer must be higher than the current ones.")
+
+        # Creiamo l'offerta
+        offers = super().create(vals)
+
+        # Una volta creata l'offerta possiamo modificare lo status della proprietà
+        offers.property_id.state = "offer_rec"
+
+        return offers
